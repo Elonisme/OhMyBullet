@@ -107,7 +107,7 @@ def qeury(file_path, assets_path, schedule):
         print(">> Result: the merged data for the week is:")
         merged_dic = dict(merged_dic) 
         print(merged_dic)
-        image_path = generate_hotmap(assets_path, everyday_total_times)
+        generate_hotmap(assets_path, everyday_total_times)
         return merged_dic
         
     elif schedule == "all":
@@ -158,8 +158,7 @@ def qeury(file_path, assets_path, schedule):
 
 
 
-def write_markdown(input_dict, title, filename, assets_path):
-    image_path = get_assets_path(assets_path)
+def write_markdown(input_dict, schedule, filename, assets_path):
     with open(filename, 'w', encoding='utf-8') as file:
         file.write("# Query And Statistics\n\n")
         file.write("Statistical results\n\n")
@@ -167,15 +166,17 @@ def write_markdown(input_dict, title, filename, assets_path):
         file.write("Pie: \n")
         file.write("```mermaid\n")
         file.write("pie showData\n")
-        file.write(f'    title query {title}\n')
+        file.write(f'    title query {schedule}\n')
         
         for key, value in input_dict.items():
             file.write(f'    "{key}" : {value}\n')
         
         file.write("```\n\n")
-        file.write("HotMap:\n")
-        embeded_hotmap = f'<img src="{image_path}" alt="HopMap Image" style="zoom: 75%;" /> \n'
-        file.write(f'{embeded_hotmap}')
+        if schedule == "month":
+            image_path = get_assets_path(assets_path)
+            file.write("HotMap:\n")
+            embeded_hotmap = f'<img src="{image_path}" alt="HopMap Image" style="zoom: 75%;" /> \n'
+            file.write(f'{embeded_hotmap}')
 
 
 def read_toml():
